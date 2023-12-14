@@ -1,11 +1,12 @@
 const express = require('express')
 const app = express()
-const port = 8000
+const BACKEND_PORT = process.env.BACKEND_PORT | 8000
 
 app.get('/', (req, res) => {
-    res.send('Hello matcha!')
+	console.log("we having some neww!")
+	res.send('Hello matcha!')
 })
 
-app.listen(port, () => {
-    console.log(`listining on port ${port}..`)
+app.listen(BACKEND_PORT, () => {
+	console.log(`listining on port ${BACKEND_PORT}..`)
 })
