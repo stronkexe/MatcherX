@@ -1,38 +1,28 @@
-import express from 'express'
-import http from 'http'
-import bodyParser from 'body-parser'
-import cookieParser from 'cookie-parser'
-import cors from 'cors'
-import db from '../database/dbConfig'
+const express = require('express');
+const pool = require('../database/dbConfig')
 
-const app = express()
+const app = express();
+const PORT = process.env.PORT || 8080;
 
-app.use(cors({ credentials: true }))
-app.use(cookieParser())
-app.use(bodyParser.json())
+const authRoutes = require('./Routes/authRouter')
 
-const server = http.createServer(app)
+app.use('/', authRoutes)
 
-server.listen(8080, () => {
-	console.log(`server listining on port ${8080}`)
-})
+//app.get('/', async (req: any, res: any) => {
+//  try {
+//    const client = await pool.connect();
+//    const result = await client.query('SELECT * FROM user')
+//    client.release();
 
-// test test test
+//    res.json(result.rows);
+//  }
+//  catch (err) {
+//    console.error('Error executing query', err);
+//    res.status(500).send('Internal Server Error');
+//  }
+//});
 
-db.one('SELECT 1')
-  .then((data) => {
-    console.log('Connection to PostgreSQL established successfully');
-  })
-  .catch((error) => {
-    console.error('Error connecting to PostgreSQL:', error);
-  });
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}..`);
+});
 
-app.get('/users', async (req, res) => {
-	try {
-    		const users = await db.any('SELECT * FROM users;');
-    		res.json(users);
-  	}
-	catch (error) {
-    		res.status(500).json({ error: 'Internal Server Error' });
-  	}
-})

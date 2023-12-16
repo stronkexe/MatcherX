@@ -1,11 +1,13 @@
-FROM node:14
+FROM node:16
 
-WORKDIR /matchats
+WORKDIR /app
 
-COPY package.json .
+COPY ./package*.json ./
 
 RUN npm install
 
 COPY . .
 
-CMD npm start
+EXPOSE 8080
+
+CMD ["npm", "start"]
