@@ -1,87 +1,54 @@
 version: '3.8'
 
-volumes:
-  # db_volume:
-  #   driver: local
-  #   name: db_volume
-  #   driver_opts:
-  #     type: none
-  #     o: bind
-  #     device: $HOME/goinfre/matchaData/database
-  
-  backend_volume:
-    driver: local
-    name: backend_volume
-    driver_opts:
-      type: none
-      o: bind
-      device: $HOME/goinfre/matchaData/backend
-  
-  frontend_volume:
-    driver: local
-    name: frontend_volume
-    driver_opts:
-      type: none
-      o: bind
-      device: $HOME/goinfre/matchaData/frontend
-
-networks:
-  hadnetwork:
-
 services:
-  # db:
-  #   image: postgres:13
-  #   restart: always
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - hadnetwork
-  #   volumes:
-  #     - db_volume:/var/lib/postgresql/data
-    
+  postgresdb:
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+      #environment:
+      #POSTGRES_DB: matchadb
+      #POSTGRES_USER: stronk
+      #POSTGRES_PASSWORD: pass
+    ports:
+      - 5432:5432
+    networks:
+      - matcha_network
+    volumes:
+      - matcha_dbdata:/var/lib/postgresql/data
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: matchaBackend
+    container_name: matcha_backend
     ports:
-      - 8000:8000
-    restart: always
-    # depends_on:
-    #   - db
-    networks:
-      - hadnetwork
-    volumes:
-      - backend_volume:/app
-  
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: matchaFrontend
-    ports:
-      - 5173:5173
+      - 8080:8080
     restart: always
     depends_on:
-      # - db
-      - backend
+      - postgresdb
     networks:
-      - hadnetwork
-    volumes:
-      - frontend_volume:/app
+      - matcha_network
 
-  # pgadmin:
-  #   container_name: pgadmin4_container
-  #   image: dpage/pgadmin4
-  #   restart: always
-  #   depends_on:
-  #     - db
-  #     - backend
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - 5050:80
-  #   networks:
-  #     - hadnetwork
-  #   # volumes:
-  #   #   - db_volume:/var/lib/postgresql/data
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    restart: always
+    depends_on:
+      - postgresdb
+    env_file:
+      - .env
+        #environment:
+        #PGADMIN_DEFAULT_EMAIL: admin@example.com
+        #PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - 5050:80
+    networks:
+      - matcha_network
+
+networks:
+  matcha_network:
+
+volumes:
+  matcha_dbdata:
+

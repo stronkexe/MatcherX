@@ -1,21 +1,13 @@
-FROM node:18
+FROM node:16
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY ./package*.json ./
 
 RUN npm install
 
-RUN npm i express
-
 COPY . .
 
-EXPOSE 8000
+EXPOSE 8080
 
-# RUN npm run build
-# RUN node index.js
-# RUN npm rebuild bcrypt --update-binary
-
-# ENTRYPOINT [ "sh", "script_helper.sh" ]
-
-CMD [ "node", "index.js"]
+CMD ["npm", "start"]
