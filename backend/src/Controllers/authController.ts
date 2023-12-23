@@ -1,6 +1,7 @@
 const express = require('express')
 const pool = require('../../database/dbConfig')
 const bcrypt = require('bcrypt')
+//const { createUserTable } = require('../Models/users/User.ts')
 //const { check, validationResult } = require('express-validator')
 
 
@@ -8,7 +9,7 @@ const login = async (req: any, res: any) => {
 
   try {
     const client = await pool.connect();
-    const result = await client.query('SELECT * FROM user')
+    const result = await client.query('SELECT * FROM User;')
     res.json(result.rows);
     client.release()
   }
@@ -25,9 +26,62 @@ const users = [
   }
 ]
 
-const signup = async (req: any, res: any) => {
 
-  const { email, password } = req.body
+const createUserTable = async (client: any) => {
+  try {
+    const createTableQuery = `
+            CREATE TABLE IF NOT EXISTS "Users" (
+                id SERIAL PRIMARY KEY,
+                email VARCHAR(150) NOT NULL,
+                password VARCHAR(200) NOT NULL,
+                created_at TIMESTAMPTZ DEFAULT NOW()
+            )
+        `;
+
+    await client.query(createTableQuery);
+    console.log('User table created successfully');
+  } catch (err) {
+    console.error('Error creating User table:', err);
+    throw err;
+  }
+};
+
+const signup = async (req: any, res: any) => {
+  const { email, password, username, first_name, last_name, avatar, gender } = req.body;
+
+  // Check if the user already exists in your database
+
+  const hashedPass = await bcrypt.hash(password, 10);
+
+  const client = await pool.connect();
+
+  try {
+    await createUserTable(client);
+
+    const insertUserQuery = `
+            INSERT INTO "Users" (email, password)
+            VALUES ($1, $2)
+        `;
+
+    const result = await client.query(insertUserQuery, [
+      email,
+      password,
+    ]);
+
+    console.log('User created successfully');
+    res.send(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error creating user' });
+  } finally {
+    client.release();
+  }
+};
+
+
+const sssignup = async (req: any, res: any) => {
+
+  const { email, password, username, first_name, last_name, avatar, gender } = req.body
   //const error = validationResult(req)
 
   //if (!error.isEmpty())
@@ -41,11 +95,33 @@ const signup = async (req: any, res: any) => {
     return res.status(400).json({ 'error': `user ${email} already exist!` })
 
   const hashedPass = await bcrypt.hash(password, 10)
-  console.log(email, password, hashedPass)
-  users.push({ email: email, password: hashedPass })
+  console.log(email, password, hashedPass, username, first_name, last_name, avatar, gender)
+  //users.push({ email: email, password: hashedPass })
   const client = await pool.connect()
-  const result = await client.query('INSERT INTO user VALUES (email, password) (?, ?)', [email, hashedPass])
-  res.send(result.rows)
+  try {
+    //await createUserTable(client)
+
+    const q = 'CREATE TABLE IF NOT EXISTS "Users" (\
+              id SERIAL PRIMARY KEY,\
+              username VARCHAR(150) NOT NULL,\
+              email VARCHAR(150) NOT NULL,\
+              password VARCHAR(200) NOT NULL,\
+              first_name VARCHAR(150) NOT NULL,\
+              last_name VARCHAR(150) NOT NULL,\
+              avatar VARCHAR(150) NOT NULL,\
+              gender VARCHAR(150) NOT NULL,\
+              biography VARCHAR(100)\
+        );'
+    //const q = '';
+    await client.query(q);
+    const result = await client.query('INSERT INTO "Users" (username, email, password, first_name, last_name, avatar, gender) VALUES ($1, $2, $3, $4, $5, $6, $7);', [email, hashedPass, username, first_name, last_name, avatar, gender])
+    console.log('user created')
+    res.send(result.rows)
+  }
+  catch (err) {
+    console.error(err)
+  }
+  //res.send(result.rows)
   client.release()
 }
 module.exports = { login, signup }
