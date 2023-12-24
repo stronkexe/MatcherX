@@ -30,10 +30,16 @@ const users = [
 const createUserTable = async (client: any) => {
   try {
     const createTableQuery = `
-            CREATE TABLE IF NOT EXISTS "Users" (
+            CREATE TABLE IF NOT EXISTS "User" (
                 id SERIAL PRIMARY KEY,
+                username VARCHAR(150) NOT NULL,
                 email VARCHAR(150) NOT NULL,
                 password VARCHAR(200) NOT NULL,
+                first_name VARCHAR(150) NOT NULL,
+                last_name VARCHAR(150) NOT NULL,
+                avatar VARCHAR(150) NOT NULL,
+                gender BOOLEAN NOT NULL,
+                biography VARCHAR(100),
                 created_at TIMESTAMPTZ DEFAULT NOW()
             )
         `;
@@ -59,13 +65,18 @@ const signup = async (req: any, res: any) => {
     await createUserTable(client);
 
     const insertUserQuery = `
-            INSERT INTO "Users" (email, password)
-            VALUES ($1, $2)
+            INSERT INTO "User" (username, email, password, first_name, last_name, avatar, gender)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
         `;
 
     const result = await client.query(insertUserQuery, [
+      username,
       email,
-      password,
+      hashedPass,
+      first_name,
+      last_name,
+      avatar,
+      gender,
     ]);
 
     console.log('User created successfully');
@@ -77,6 +88,8 @@ const signup = async (req: any, res: any) => {
     client.release();
   }
 };
+
+module.exports = { signup };
 
 
 const sssignup = async (req: any, res: any) => {

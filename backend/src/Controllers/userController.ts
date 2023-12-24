@@ -4,8 +4,9 @@ const pool = require('../../database/dbConfig')
 const getAllUsers = async (req: any, res: any) => {
   try {
     const client = await pool.connect()
-    const users = await client.query('SELECT * FROM user')
-    res.status(200).send({ "users": users.rows })
+    const users = await client.query('SELECT * FROM "User";')
+    console.log('Users: ', users.rows)
+    res.status(200).send({ users })
     client.release()
   }
   catch (err) {
