@@ -8,9 +8,16 @@ const bcrypt = require('bcrypt')
 const login = async (req: any, res: any) => {
 
   try {
+    const { email, password } = req.body
     const client = await pool.connect();
-    const result = await client.query('SELECT * FROM User;')
-    res.json(result.rows);
+    const user = await client.query('SELECT * FROM "User" WHERE email=$1;', [email])
+    console.log('user: ', user)
+    if (user) {
+      const isPassValid = await bcrypt.compare(user.rows.password, password)
+      if (isPassValid)
+        return res.status(200).send({ user })
+    }
+    res.status(401).send({ 'invalid user': user });
     client.release()
   }
   catch (err) {
