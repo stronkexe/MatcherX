@@ -11,10 +11,11 @@ const login = async (req: any, res: any) => {
     const { email, password } = req.body
     const client = await pool.connect();
     const user = await client.query('SELECT * FROM "User" WHERE email=$1;', [email])
-    console.log('user: ', user)
-    if (user) {
-      const isPassValid = await bcrypt.compare(user.rows.password, password)
-      if (isPassValid)
+    console.log('user: ', user.rows)
+    if (user.rows.length > 0) {
+      const isPassValid = await bcrypt.compare(user.rows[0].password, password)
+      console.log('bcrypt result: ', isPassValid)
+      if (isPassValid === true)
         return res.status(200).send({ user })
     }
     res.status(401).send({ 'invalid user': user });
@@ -96,7 +97,7 @@ const signup = async (req: any, res: any) => {
   }
 };
 
-module.exports = { signup };
+//module.exports = { signup };
 
 
 const sssignup = async (req: any, res: any) => {
