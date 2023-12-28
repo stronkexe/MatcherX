@@ -7,7 +7,11 @@ export const Login = () => {
 
   const _login = async () => {
     try {
-      const res = await axios.get(`/auth/login`)
+      console.log('input data: ', inputData)
+      const res = await axios.post(`/auth/login`, {
+        email: inputData.email,
+        password: inputData.password
+      })
       console.log(res.data)
     }
     catch (err) {
@@ -19,6 +23,7 @@ export const Login = () => {
       <input type="email" placeholder="email" onChange={(e) => { setInputData({ ...inputData, email: e.target.value }) }} />
       <input type="password" placeholder="password" onChange={(e) => { setInputData({ ...inputData, password: e.target.value }) }} />
       <button onClick={_login}>login</button>
+      <a>forgot password?</a>
     </div>
   )
 }

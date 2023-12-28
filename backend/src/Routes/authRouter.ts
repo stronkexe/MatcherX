@@ -6,7 +6,8 @@ router.use(cors({
   cridentials: true,
   origin: `http://localhost:5173`
 }))
-router.get('/login', authController.login)
+
+router.post('/login', authController.login)
 router.post('/signup', authController.signup)
 
 module.exports = router
