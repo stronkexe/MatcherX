@@ -27,12 +27,12 @@ const login = async (req: any, res: any) => {
   }
 };
 
-const users = [
-  {
-    email: "stronk@test.ma",
-    password: "pass1234",
-  }
-]
+// const users = [
+//   {
+//     email: "stronk@test.ma",
+//     password: "pass1234",
+//   }
+// ]
 
 
 const createUserTable = async (client: any) => {
@@ -45,7 +45,7 @@ const createUserTable = async (client: any) => {
                 password VARCHAR(200) NOT NULL,
                 first_name VARCHAR(150) NOT NULL,
                 last_name VARCHAR(150) NOT NULL,
-                avatar VARCHAR(150) NOT NULL,
+                avatar VARCHAR(150),
                 gender BOOLEAN NOT NULL,
                 biography VARCHAR(100),
                 created_at TIMESTAMPTZ DEFAULT NOW()
@@ -100,49 +100,49 @@ const signup = async (req: any, res: any) => {
 //module.exports = { signup };
 
 
-const sssignup = async (req: any, res: any) => {
+// const sssignup = async (req: any, res: any) => {
 
-  const { email, password, username, first_name, last_name, avatar, gender } = req.body
-  //const error = validationResult(req)
+//   const { email, password, username, first_name, last_name, avatar, gender } = req.body
+//   //const error = validationResult(req)
 
-  //if (!error.isEmpty())
-  // return res(400, { error: error.array() })
+//   //if (!error.isEmpty())
+//   // return res(400, { error: error.array() })
 
-  // to implement validation server side later :)
+//   // to implement validation server side later :)
 
-  const user = users.find((u) => { return u.email === email })
+//   const user = users.find((u) => { return u.email === email })
 
-  if (user)
-    return res.status(400).json({ 'error': `user ${email} already exist!` })
+//   if (user)
+//     return res.status(400).json({ 'error': `user ${email} already exist!` })
 
-  const hashedPass = await bcrypt.hash(password, 10)
-  console.log(email, password, hashedPass, username, first_name, last_name, avatar, gender)
-  //users.push({ email: email, password: hashedPass })
-  const client = await pool.connect()
-  try {
-    //await createUserTable(client)
+//   const hashedPass = await bcrypt.hash(password, 10)
+//   console.log(email, password, hashedPass, username, first_name, last_name, avatar, gender)
+//   //users.push({ email: email, password: hashedPass })
+//   const client = await pool.connect()
+//   try {
+//     //await createUserTable(client)
 
-    const q = 'CREATE TABLE IF NOT EXISTS "Users" (\
-              id SERIAL PRIMARY KEY,\
-              username VARCHAR(150) NOT NULL,\
-              email VARCHAR(150) NOT NULL,\
-              password VARCHAR(200) NOT NULL,\
-              first_name VARCHAR(150) NOT NULL,\
-              last_name VARCHAR(150) NOT NULL,\
-              avatar VARCHAR(150) NOT NULL,\
-              gender VARCHAR(150) NOT NULL,\
-              biography VARCHAR(100)\
-        );'
-    //const q = '';
-    await client.query(q);
-    const result = await client.query('INSERT INTO "Users" (username, email, password, first_name, last_name, avatar, gender) VALUES ($1, $2, $3, $4, $5, $6, $7);', [email, hashedPass, username, first_name, last_name, avatar, gender])
-    console.log('user created')
-    res.send(result.rows)
-  }
-  catch (err) {
-    console.error(err)
-  }
-  //res.send(result.rows)
-  client.release()
-}
+//     const q = 'CREATE TABLE IF NOT EXISTS "Users" (\
+//               id SERIAL PRIMARY KEY,\
+//               username VARCHAR(150) NOT NULL,\
+//               email VARCHAR(150) NOT NULL,\
+//               password VARCHAR(200) NOT NULL,\
+//               first_name VARCHAR(150) NOT NULL,\
+//               last_name VARCHAR(150) NOT NULL,\
+//               avatar VARCHAR(150) NOT NULL,\
+//               gender VARCHAR(150) NOT NULL,\
+//               biography VARCHAR(100)\
+//         );'
+//     //const q = '';
+//     await client.query(q);
+//     const result = await client.query('INSERT INTO "Users" (username, email, password, first_name, last_name, avatar, gender) VALUES ($1, $2, $3, $4, $5, $6, $7);', [email, hashedPass, username, first_name, last_name, avatar, gender])
+//     console.log('user created')
+//     res.send(result.rows)
+//   }
+//   catch (err) {
+//     console.error(err)
+//   }
+//   //res.send(result.rows)
+//   client.release()
+// }
 module.exports = { login, signup }
