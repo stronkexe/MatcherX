@@ -9,10 +9,10 @@ export const Signup = () => {
     try {
       console.log('input data: ', inputData)
 
-      // check data first
+      // // check data first
       const res = await axios.post(`http://localhost:8080/auth/signup`, {
-        firsName: inputData.firstName,
-        lastName: inputData.lastName,
+        first_name: inputData.firstName,
+        last_name: inputData.lastName,
         username: inputData.username,
         gender: inputData.gender,
         email: inputData.email,
@@ -25,13 +25,27 @@ export const Signup = () => {
     }
   }
 
+  const handleGenderChange = (e: any) => {
+    const x = e.target.value === 'Male' ? 1 : 0
+    setInputData({ ...inputData, gender: x})
+  }
+
   return (
     <div className="Signup">
       <input type="text" placeholder="first name" onChange={(e) => { setInputData({ ...inputData, firstName: e.target.value }) }} />
       <input type="text" placeholder="last name" onChange={(e) => { setInputData({ ...inputData, lastName: e.target.value }) }} />
       <input type="text" placeholder="username" onChange={(e) => { setInputData({ ...inputData, username: e.target.value }) }} />
-      <input type="radio" onChange={(e) => { setInputData({ ...inputData, gender: e.target.value }) }} />
-      <input type="radio" onChange={(e) => { setInputData({ ...inputData, gender: e.target.value }) }} />
+      
+      <div className='roomType'>
+          <span>
+              <input type="radio" name="genderOptions" value="Male" onChange={handleGenderChange} />
+              Male
+          </span>
+          <span>
+              <input type="radio" name="genderOptions" value="Female" onChange={handleGenderChange} />
+              Female
+          </span>
+      </div>
       
       <input type="email" placeholder="email" onChange={(e) => { setInputData({ ...inputData, email: e.target.value }) }} />
       <input type="password" placeholder="password" onChange={(e) => { setInputData({ ...inputData, password: e.target.value }) }} />
