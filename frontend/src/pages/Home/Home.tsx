@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
+import { useAuth } from "../../components/Auth/Auth";
 
 export const Home = () => {
   const [users, setUsers] = useState([])
-  
+  const auth = useAuth()
+
   useEffect(() => {
     const getUsers = async () => {
       const res = await axios.get(`http://localhost:8080/api/users`, { withCredentials: true })
@@ -26,7 +28,7 @@ export const Home = () => {
   console.log('Users: ', users)
   return (
     <div className='Home'>
-      Home
+      If you're here, you're allowed to be here! Mr {auth.user}
     </div>
   )
 }

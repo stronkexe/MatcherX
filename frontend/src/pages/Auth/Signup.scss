@@ -1,0 +1,58 @@
+.Signup {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Signup .col-1,
+  .Signup .col-2,
+  .Signup .col-3 {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+  
+  .Signup input[type='text'],
+  .Signup input[type='email'],
+  .Signup input[type='password'],
+  .Signup button {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: calc(100% - 22px);
+  }
+  
+  .Signup .roomType {
+    display: flex;
+    margin-bottom: 15px;
+  }
+  
+  .Signup .roomType span {
+    margin-right: 10px;
+  }
+  
+  .Signup .submit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .Signup .submit button {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .Signup .submit a {
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+  }
+  
