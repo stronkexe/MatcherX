@@ -1,5 +1,5 @@
 const express = require('express');
-const pool = require('../database/dbConfig')
+const pool = require('../database/dbConfig.ts')
 const cors = require('cors')
 const app = express();
 
@@ -15,8 +15,8 @@ app.use(cors(corsOptions));
 
 const PORT = process.env.PORT || 8080;
 
-const authRoutes = require('./Routes/authRouter')
-const usersRoutes = require('./Routes/usersRouter')
+const authRoutes = require('./Routes/authRouter.ts')
+const usersRoutes = require('./Routes/usersRouter.ts')
 
 app.use('/auth', authRoutes)
 app.use('/api/users', usersRoutes)

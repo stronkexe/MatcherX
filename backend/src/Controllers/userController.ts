@@ -1,5 +1,5 @@
 const express = require('express')
-const pool = require('../../database/dbConfig')
+const pool = require('../../database/dbConfig.ts')
 
 const getAllUsers = async (req: any, res: any) => {
   try {

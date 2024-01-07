@@ -29,6 +29,8 @@ services:
       - postgresdb
     networks:
       - matcha_network
+    # volumes:
+    #   - ./backend/node_modules
 
   pgadmin:
     container_name: pgadmin4
